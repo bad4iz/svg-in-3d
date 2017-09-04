@@ -1,12 +1,73 @@
-var camera, controls, scene, renederer, geomenty;
+var camera, controls, scene, renderer, geomenty;
 
 function init() {
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xcccccc);
 
+    renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    var container = document.getElementById('container');
+    container.appendChild(renderer.domElement);
+
+    camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 3000);
+    camera.position.z = 500;
+
+    controls = new THREE.OrbitControls(camera, renderer, domElement);
 
 
+    //  что есть на сцене
+    var texture = (new THREE.TextureLoader).load('particle.png');
+    var material = new THREE.PointCloudMaterial({
+        size: 10,
+        vertexColors: THREE.VertexColors,
+        map: texture
+    });
+
+    geomenty = new THREE.Geometry();
+    var x, y, z;
+
+    // Точки
+    for (var i=0; i<=1; i++) {
+        x = 0;
+        y = 0;
+        z = 0;
+
+        geomenty.vertices.push(new THREE.Vector3(x,y,z));
+        geomenty.colors.push(new THREE.Color(Math.random(), Math.random(), Math.random()));
+    }
+
+    var pointcloud = new THREE.PointCloud(geomenty,material);
+    scene.add(pointcloud);
+    // конец сцены
+
+    window.addEventListener('resize', onWindowResize, false) ;
+
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth / window.innerHeight);
+    }
+
+    var i = 0;
+    function animate() {
+        i++;
+        requestAnimationFrame(animate);
+
+
+        geomenty.verticesNeedUpdate = true;
+
+        render();
+    }
+
+    function render() {
+        renderer.render(scene, camera);
+    }
+
+    init();
+    animate();
 }
 
 
