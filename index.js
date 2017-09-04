@@ -1,4 +1,4 @@
-var camera, controls, scene, renderer, geomenty;
+var camera, controls, scene, renderer, geomentry;
 
 function init() {
 
@@ -15,7 +15,7 @@ function init() {
     camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 3000);
     camera.position.z = 500;
 
-    controls = new THREE.OrbitControls(camera, renderer, domElement);
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
 
 
     //  что есть на сцене
@@ -26,48 +26,50 @@ function init() {
         map: texture
     });
 
-    geomenty = new THREE.Geometry();
+    geomentry = new THREE.Geometry();
     var x, y, z;
 
     // Точки
-    for (var i=0; i<=1; i++) {
+    for (var i = 0; i <= 10; i++) {
         x = 0;
         y = 0;
-        z = 0;
+        z = i;
 
-        geomenty.vertices.push(new THREE.Vector3(x,y,z));
-        geomenty.colors.push(new THREE.Color(Math.random(), Math.random(), Math.random()));
+        geomentry.vertices.push(new THREE.Vector3(x, y, z));
+        geomentry.colors.push(new THREE.Color(Math.random(), Math.random(), Math.random()));
     }
 
-    var pointcloud = new THREE.PointCloud(geomenty,material);
-    scene.add(pointcloud);
+    var pointCloud = new THREE.PointCloud(geomentry, material);
+    scene.add(pointCloud);
     // конец сцены
 
-    window.addEventListener('resize', onWindowResize, false) ;
-
-    function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth / window.innerHeight);
-    }
-
-    var i = 0;
-    function animate() {
-        i++;
-        requestAnimationFrame(animate);
-
-
-        geomenty.verticesNeedUpdate = true;
-
-        render();
-    }
-
-    function render() {
-        renderer.render(scene, camera);
-    }
-
-    init();
-    animate();
+    window.addEventListener('resize', onWindowResize, false);
 }
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth / window.innerHeight);
+}
+
+var i = 0;
+
+function animate() {
+    i++;
+    requestAnimationFrame(animate);
+
+
+    geomentry.verticesNeedUpdate = true;
+
+    render();
+}
+
+function render() {
+    renderer.render(scene, camera);
+}
+
+init();
+animate();
+
 
 
