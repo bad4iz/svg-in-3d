@@ -1,4 +1,34 @@
-var camera, controls, scene, renderer, geomentry;
+let size = 500;
+let canvas = document.createElement('canvas');
+ctx = canvas.getContext('2d');
+canvas.width = size;
+canvas.height = size;
+canvas.classList.add('tempcanvas');
+document.body.appendChild(canvas);
+
+let imageCoords = [];
+
+let img = new Image();
+img.onload = () => {
+  ctx.drawImage(img, 0, 0, size, size);
+  let data = ctx.getImageData(0, 0, size, size);
+  data = data.data;
+
+  for(let y = 0; y < size; y +=1) {
+    for(let x = 0; x < size; x +=1) {
+      let red = data[((size * y) + x) *4];
+      let green = data[((size * y) + x) *4 + 1];
+      let blue = data[((size * y) + x) *4 + 2];
+      let alpha = data[((size * y) + x) *4 + 3];
+
+      alpha && imageCoords.push([10 * (x - size/2),10 * (y - size/2)]);
+    }
+  }
+
+console.log(imageCoords);
+
+
+let camera, controls, scene, renderer, geomentry;
 
 function init() {
 
@@ -23,23 +53,30 @@ function init() {
   var material = new THREE.PointCloudMaterial({
     size: 10,
     vertexColors: THREE.VertexColors,
-    map: texture
+    map: texture,
+    alphaTest: .1
   });
 
   geomentry = new THREE.Geometry();
   var x, y, z;
 
   // Точки
-  for (var i = 0; i <= 100000; i++) {
-    x = Math.sin(i / 10) * 100;
-    y = Math.cos(i / 10)* 100;
-    z = i;
+  // for (var i = 0; i <= 100000; i++) {
+  //   x = Math.sin(i / 10) * 100;
+  //   y = Math.cos(i / 10)* 100;
+  //   z = i;
+  //
+  //   geomentry.vertices.push(new THREE.Vector3(x, y, z));
+  //   geomentry.colors.push(new THREE.Color(Math.random(), Math.random(), Math.random()));
+  //
+  // }
 
-    geomentry.vertices.push(new THREE.Vector3(x, y, z));
+  imageCoords.forEach((el, index) => {
+    geomentry.vertices.push(new THREE.Vector3(el[0], el[1], Math.random() * 100 ));
     geomentry.colors.push(new THREE.Color(Math.random(), Math.random(), Math.random()));
-  }
+  });
 
-  var pointCloud = new THREE.PointCloud(geomentry, material);
+  let pointCloud = new THREE.PointCloud(geomentry, material);
   scene.add(pointCloud);
   // конец сцены
 
@@ -78,8 +115,11 @@ function render() {
   renderer.render(scene, camera);
 }
 
+
 init();
 animate();
+};
 
+img.src = "img/close.svg";
 
 
