@@ -30,10 +30,10 @@ function init() {
   var x, y, z;
 
   // Точки
-  for (var i = 0; i <= 100; i++) {
+  for (var i = 0; i <= 1000; i++) {
     x = Math.sin(i / 10) * 100;
-    y = 0;
-    z = i * 10;
+    y = Math.cos(i / 10)* 100;
+    z = i +10;
 
     geomentry.vertices.push(new THREE.Vector3(x, y, z));
     geomentry.colors.push(new THREE.Color(Math.random(), Math.random(), Math.random()));
@@ -60,7 +60,7 @@ function animate() {
 
   geomentry.vertices.forEach((particle, index) => {
     let dX, dY, dZ;
-    dX = Math.sin(i/10 + index/2)/2;
+    dX = Math.sin(i/10 + index/2)/2 ;
     dY = 0;
     dY = 0;
 
