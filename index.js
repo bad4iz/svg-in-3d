@@ -30,10 +30,10 @@ function init() {
     var x, y, z;
 
     // Точки
-    for (var i = 0; i <= 10; i++) {
-        x = 0;
+    for (var i = 0; i <= 100; i++) {
+        x = Math.sin(i/10)*100;
         y = 0;
-        z = i;
+        z = i*10;
 
         geomentry.vertices.push(new THREE.Vector3(x, y, z));
         geomentry.colors.push(new THREE.Color(Math.random(), Math.random(), Math.random()));
