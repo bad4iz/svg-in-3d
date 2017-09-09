@@ -42,14 +42,18 @@ function getArrayFromImage(img) {
       let blue = data[((size * y) + x) * 4 + 2];
       let alpha = data[((size * y) + x) * 4 + 3];
 
-      alpha && imageCoords.push([10 * (x - size / 2), 10 * (y - size / 2)]);
+      alpha && imageCoords.push([10 * (x - size / 2), 10 * (size / 2 - y)]);
     }
   }
   return fillUp(imageCoords, 1500);
 }
 
-let images = ['img/close.svg', 'img/arrow.svg'];
+let images = ['img/close.svg', 'img/arrow.svg', 'img/place.svg', 'img/particle.png' ];
 loadImages(images, function (loadImages) {
+  let gallery = [];
+  loadImages.forEach((el, index) => {
+    gallery.push(getArrayFromImage(loadImages[index]))
+  });
   let img0 = getArrayFromImage(loadImages[0]);
   let img1 = getArrayFromImage(loadImages[1]);
 
@@ -97,7 +101,7 @@ loadImages(images, function (loadImages) {
     //
     // }
 
-    img0.forEach((el, index) => {
+    gallery[0].forEach((el, index) => {
       geomentry.vertices.push(new THREE.Vector3(el[0], el[1], Math.random() * 100));
       geomentry.colors.push(new THREE.Color(Math.random(), Math.random(), Math.random()));
     });
@@ -145,11 +149,13 @@ loadImages(images, function (loadImages) {
   init();
   animate();
 
-
+let current = 0;
 document.body.addEventListener('click', () => {
+  current++;
+  current = current % gallery.length;
   geomentry.vertices.forEach((particle, index) => {
     let tl = new TimelineMax();
-    tl.to(particle, 1, {x: img1[index][0], y: img1[index][1]})});
+    tl.to(particle, 1, {x: gallery[current][index][0], y: gallery[current][index][1]})});
 }, true);
 
 
