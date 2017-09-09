@@ -27,6 +27,14 @@ function fillUp(array, max) {
   return array;
 }
 
+function shuffle(a) {
+  for (let i = a.length; i; i--) {
+    let j = Math.floor(Math.random()*i);
+    [a[i-1],a[j]] = [a[j] , a[i-1]];
+  }
+  return a;
+}
+
 function getArrayFromImage(img) {
   let imageCoords = [];
 
@@ -45,7 +53,7 @@ function getArrayFromImage(img) {
       alpha && imageCoords.push([10 * (x - size / 2), 10 * (size / 2 - y)]);
     }
   }
-  return fillUp(imageCoords, 1500);
+  return shuffle(fillUp(imageCoords, 1500)) ;
 }
 
 let images = ['img/close.svg', 'img/arrow.svg', 'img/place.svg', 'img/particle.png' ];
@@ -54,9 +62,6 @@ loadImages(images, function (loadImages) {
   loadImages.forEach((el, index) => {
     gallery.push(getArrayFromImage(loadImages[index]))
   });
-  let img0 = getArrayFromImage(loadImages[0]);
-  let img1 = getArrayFromImage(loadImages[1]);
-
 
   let camera, controls, scene, renderer, geomentry;
 
@@ -84,7 +89,7 @@ loadImages(images, function (loadImages) {
       size: 10,
       vertexColors: THREE.VertexColors,
       map: texture,
-      alphaTest: .1
+      alphaTest: .5
     });
 
     geomentry = new THREE.Geometry();
@@ -120,16 +125,15 @@ loadImages(images, function (loadImages) {
   }
 
   var i = 0;
-
   function animate() {
-    i++;
+   i++;
     requestAnimationFrame(animate);
 
     geomentry.vertices.forEach((particle, index) => {
       let dX, dY, dZ;
-      dX = Math.sin(i / 10 + index / 2) / 2;
-      dY = 0;
-      dY = 0;
+      dX = Math.sin(i / 10 + index / 2) / 20;
+      dY = Math.cos(i / 10 + index / 2) / 20;
+      dZ = Math.sin(i / 10 + index / 2) / 20;
 
       particle.add(new THREE.Vector3(dX, dY, dZ))
 
